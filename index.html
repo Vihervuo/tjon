@@ -1,1 +1,110 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <title>Päivälaskuri</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    .count {
+      font-size: 6rem;
+      font-weight: bold;
+      color: #00ff88;
+    }
+    .sub {
+      font-size: 2rem;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tänään jäljellä</h1>
+  <div class="count" id="daysLeft">Ladataan...</div>
+  <div class="sub" id="day100"></div>
 
+  <script>
+    const lomat = [
+      [new Date(2025, 9, 13), new Date(2025, 9, 17)], 
+      [new Date(2025, 11, 22), new Date(2026, 0, 6)]
+    ];
+    const tavoite = new Date(2026, 1, 5); // 5 Feb 2026
+
+    function laske() {
+      const tanaan = new Date();
+      tanaan.setHours(0,0,0,0);
+
+      if (tavoite < tanaan) {
+        document.getElementById("daysLeft").textContent = "Päivämäärä on jo mennyt";
+        document.getElementById("day100").textContent = "";
+        return;
+      }
+
+      let paiviaJaljella = 0;
+      let paiva = new Date(tanaan);
+      let paiva100 = null;
+
+      while (paiva < tavoite) {
+        paiva.setDate(paiva.getDate() + 1);
+        if (paiva.getDay() >= 1 && paiva.getDay() <= 5) {
+          const lomassa = lomat.some(([alku, loppu]) => paiva >= alku && paiva <= loppu);
+          if (!lomassa) {
+            paiviaJaljella++;
+            if (paiva100 === null) {
+              let loppuPaivia = 0;
+              let testiP = new Date(paiva);
+              while (testiP < tavoite) {
+                testiP.setDate(testiP.getDate() + 1);
+                if (testiP.getDay() >= 1 && testiP.getDay() <= 5 &&
+                    !lomat.some(([alku, loppu]) => testiP >= alku && testiP <= loppu)) {
+                  loppuPaivia++;
+                }
+              }
+              if (loppuPaivia === 100) {
+                paiva100 = new Date(paiva);
+              }
+            }
+          }
+        }
+      }
+
+      document.getElementById("daysLeft").textContent = paiviaJaljella;
+      document.getElementById("day100").textContent = paiva100
+        ? "Tj 100: " + paiva100.toISOString().slice(0,10)
+        : "";
+    }
+
+    // Schedule next refresh exactly at 06:00
+    function scheduleNextRefresh() {
+      const now = new Date();
+      const next = new Date(now);
+      next.setHours(6, 0, 0, 0);
+      if (now >= next) {
+        // if it's already past 06:00 today, set to 06:00 tomorrow
+        next.setDate(next.getDate() + 1);
+      }
+      const msUntilNext = next - now;
+      setTimeout(() => {
+        laske();
+        scheduleNextRefresh();
+      }, msUntilNext);
+    }
+
+    laske();
+    scheduleNextRefresh();
+  </script>
+</body>
+</html>
