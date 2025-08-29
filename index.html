@@ -16,19 +16,22 @@
       color: #1a212e;
       font-family: "Inknut Antiqua", sans-serif;
       text-align: center;
+      margin: 0;
       padding-top: 50px;
     }
+
     .count {
-        position: fixed;
-        top: 56%;
-        left: 44%;
-        transform: translate((-44%, -56%));
-      font-size: 7em;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 7vw; 
       color: #009600;
       z-index: 1000;
     }
+
     .sub {
-      font-size: 2rem;
+      font-size: 2vw; 
       margin-top: 1rem;
     }
   </style>
@@ -38,11 +41,19 @@
   <div class="sub" id="day100"></div>
 
   <script>
+    // ES5-compatible date formatting
+    function formatDate(d) {
+      var y = d.getFullYear();
+      var m = ("0" + (d.getMonth() + 1)).slice(-2);
+      var day = ("0" + d.getDate()).slice(-2);
+      return y + "-" + m + "-" + day;
+    }
+
     var lomat = [
       [new Date(2025, 9, 13), new Date(2025, 9, 17)], 
       [new Date(2025, 11, 22), new Date(2026, 0, 6)]
     ];
-    var tavoite = new Date(2026, 1, 5); // 5 Feb 2026
+    var tavoite = new Date(2026, 1, 5); 
 
     function laske() {
       var tanaan = new Date();
@@ -70,6 +81,7 @@
               break;
             }
           }
+
           if (!lomassa) {
             paiviaJaljella++;
             if (paiva100 === null) {
@@ -102,7 +114,7 @@
 
       document.getElementById("daysLeft").textContent = paiviaJaljella;
       document.getElementById("day100").textContent = paiva100
-        ? "Tj 100: " + paiva100.toISOString().slice(0, 10)
+        ? "Tj 100: " + formatDate(paiva100)
         : "";
     }
 
