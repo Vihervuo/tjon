@@ -1,0 +1,29 @@
+@import url('https://fonts.cdnfonts.com/css/inknut-antiqua');
+
+    body {
+      background-image: url('bakkari.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-attachment: fixed;
+      background-color: #1a212e;
+      font-family: "Inknut Antiqua", sans-serif;
+      text-align: center;
+      margin: 0;
+      padding-top: 50px;
+    }
+
+    .count {
+      position: absolute;
+      top: 74%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 7vw; 
+      color: #009600;
+      z-index: 1000;
+    }
+
+    .sub {
+      font-size: 2vw; 
+      margin-top: 1rem;
+    }
